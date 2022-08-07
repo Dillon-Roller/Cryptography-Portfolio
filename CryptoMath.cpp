@@ -1,5 +1,7 @@
 #include "CryptoMath.h"
 
+/* Given the alpha and beta keys along with the string of text, encrypts the
+text using affine cipher */
 string affineEncode(int a, int b, string text) {
 	string A = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	text = upper(text);
@@ -8,7 +10,8 @@ string affineEncode(int a, int b, string text) {
 	}
 	return text;
 }
-
+/* Given the alpha and beta keys along with the string of ciphertext, decrypts
+the text using inverse affine cipher */
 string affineDecode(int a, int b, string text) {
 	string A = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	text = upper(text);
@@ -23,6 +26,10 @@ string affineDecode(int a, int b, string text) {
 	return text;
 }
 
+/* This attack uses only the ciphertext. Brute force is ran and all 312
+possible decryptions are ran. There is no functionality for the program to recognize which
+of the possible outputs are legible in english language, so the user must look and deduce
+which row gives the correct result, and from that you can get the alpha and beta keys */
 void affineAttackCiO(string text) {
 	string A = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	text = upper(text);
@@ -37,6 +44,11 @@ void affineAttackCiO(string text) {
 
 }
 
+/* This attack uses some plaintext and its corresponding ciphertext. This is
+attack is done by creating a relationship between the input and the output. By only using
+two letters from the plaintext and its corresponding ciphertext, you can create two
+equations with two unknowns and solve the congruential equations simultaneously. This
+gives you alpha and beta keys. */
 void affineAttackKP(string plain, string cipher, int& a, int& b) {
 	string A = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	plain = upper(plain);

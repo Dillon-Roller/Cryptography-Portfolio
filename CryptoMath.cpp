@@ -154,6 +154,8 @@ int isPrimitive(int a, int m) {
 	return gcd(a, phi(m)) == 1;
 }
 
+/* Given a number n, returns the number of numbers that are less than n and are
+relatively prime to n ( gcd (a, n) == 1 for all a less than n) */
 long long int phi(long long int n)
 {
 	long long int result = n; 
@@ -177,7 +179,8 @@ int gcd(int a, int b){
 		return b;
 	return gcd(b % a, a);
 }
-
+/* Given a plaintext string and key string, encrypts the plaintext using a
+multi-alphabet cipher. This is a block cipher that uses a vector as the key. */
 string vigenereEncrypt(string text, string key) {
 	string A = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	text = upper(text);
@@ -187,7 +190,7 @@ string vigenereEncrypt(string text, string key) {
 	}
 	return text;
 }
-
+/* Given ciphertext string and key, decrypts the ciphertext */
 string vigenereDecrypt(string text, string key) {
 	string A = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	text = upper(text);
@@ -197,7 +200,8 @@ string vigenereDecrypt(string text, string key) {
 	}
 	return text;
 }
-
+/* Given a ciphertext string, attempts to deduce the length of
+the key used to encrypt it. This attack uses symmetry in the encrypted data. */
 int vigenereAttackKeyLength(string text) {
 	text = upper(text);
 	vector<int> coincidences;
@@ -229,6 +233,11 @@ int vigenereAttackKeyLength(string text) {
 	return max_ind + 1;
 }
 
+/* Given a ciphertext string and the length of the key, gives you the
+key used in the encryption. This works better for longer ciphertext strings. The frequency
+of each letter is computed and dotted with the frequencies of English letters, but we shift
+this vector everytime and see which dot product produces the greatest result. This tells us
+information about which letters were used. */
 string vigenereAttackKey(string text, int length) {
 	const vector<double> FREQ_ENG = { .082, .015, .028, .043, .127, .022, .020, .061, .070, .002, .008, .040, .024,
 		.067, .075, .019, .001, .060, .063, .091, .028, .010, .023, .001, .020, .001 };
@@ -276,15 +285,18 @@ string vigenereAttackKey(string text, int length) {
 	}
 	return result;
 }
-
+/* Given a vector of integers and number of shifts, shifts (more
+specifically, rotates) all elements that many times to the right. Any element that goes off
+the end goes back to the beginning. */
 vector<double> shiftVectorRight(const vector<double>& vec, int num) {
 	if (num == 0) return vec;
 
 	vector<double> newvec;
 	int count = 0;
-	int i = vec.size() - num;
-	while (count < (int)vec.size()) {
-		newvec.push_back(vec[i % (int)vec.size()]);
+	int vec_size = (int)vec.size();
+	int i = vec_size - num;
+	while (count < vec_size) {
+		newvec.push_back(vec[i % vec_size]);
 		count++;
 		i++;
 	}

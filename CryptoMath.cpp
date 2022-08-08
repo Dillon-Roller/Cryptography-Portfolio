@@ -72,6 +72,14 @@ void affineAttackKP(string plain, string cipher, int& a, int& b) {
 	return;
 }
 
+/* This attack assumes the user has in their possession the encryption
+machine, and they can run any plaintext they want through it and see its corresponding
+ciphertext. Since this is an affine mapping, the equation is of the form y = ax + b, where y
+is the ciphertext and x is the plaintext characters. The trick is to run ab through the
+machine and observe its output. Since a is the first letter of the alphabet, its index is 0. So
+a gets mapped to y = a * 0 + b which is equivalent to y = b. Now, b gets mapped to y = a * 1 + b 
+which is equivalent to y = a + b. Since we know b we can solve for a.Therefore, we can find 
+the alpha and beta keys */
 void affineAttackChP(int& a, int& b, int a2, int b2) {
 	string cipher = affineEncode(a2, b2, "ab");
 	b = (cipher[0] - 'A' + 26) % 26;
@@ -79,6 +87,8 @@ void affineAttackChP(int& a, int& b, int a2, int b2) {
 	return;
 }
 
+/* Same procedure as the chosen plaintext, since decryption is also an
+affine map. */
 void affineAttackChC(int& a, int& b, int a2, int b2) {
 	string plain = affineDecode(a2, b2, "ab");
 	b = (plain[0] - 'A' + 26) % 26;
@@ -86,6 +96,7 @@ void affineAttackChC(int& a, int& b, int a2, int b2) {
 	return;
 }
 
+/* Given a string, converts the string to uppercase */
 string upper(string text) {
 	for (auto& c : text) {
 		c = toupper(c);
@@ -93,6 +104,12 @@ string upper(string text) {
 	return text;
 }
 
+/* Given two integers, performs the extended Euclidean Algorithm on them,
+which, in addition to computing the gcd(a, b), also simultaneously computes, with little to
+no extra cost, the coefficients of Bezout’s identity: ax + by = gcd(a, b). In normal
+euclidean division, only the remainders and kept, and the quotients are discarded. This
+function takes advantage of those quotients (along with the remainders) and computes x
+and y. */
 int gcdExtended(int a, int b, int& x, int& y)
 {
 	if (a == 0)
@@ -112,6 +129,13 @@ int gcdExtended(int a, int b, int& x, int& y)
 	return gcd;
 }
 
+/* Given a number a and a working modulus m, computes the inverse of a
+mod m. Since the gcdExtended solves equations of the form ax + by = gcd(a, b), let y =
+m. Then ax + bm = gcd(a, b) => ax = gcd(a, b) (mod m). We want the inverse of a, so we
+need ax = 1 and solve for x, so we need gcd(a, b) = 1. So we first check that gcd(a, b) is
+indeed 1 (which means they are relatively prime), then we compute gcdExtended(a, m).
+This return x and y, but we only care about the x for this particular function. This is our
+inverse mod m.*/
 int modInverse(int a, int m) {
 
 	int x, y;
@@ -124,6 +148,7 @@ int modInverse(int a, int m) {
 	return (x + m) % m; //handles negative values
 }
 
+/* not working as intended as of yet does trivial check*/
 int isPrimitive(int a, int m) {
 	//fix
 	return gcd(a, phi(m)) == 1;
@@ -145,6 +170,8 @@ long long int phi(long long int n)
 	return result;
 }
 
+/* Given a and b, recursively computes the greatest common divisor of a and b. This
+function uses the property that the gcd(a, b) is congruent to the gcd(b mod a, a) */
 int gcd(int a, int b){
 	if (a == 0)
 		return b;

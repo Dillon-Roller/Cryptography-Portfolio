@@ -339,10 +339,15 @@ long long int modPow(long long int a, long long int n, long long int m) {
 	return res;
 }
 
+/* Given a number n, exponent e, and the message as an integer, encrypts the
+message by calling modPow(message, e, n) */
 long long int RSAEncrypt(long long int n, long long int e, long long int plain) {
 	return modPow(plain, e, n);
 }
 
+/* Given the secret prime p and q, and the working exponent e, decrypts the
+message. This is first done by computing the inverse of e mod phi(n), and calling
+modPow(message, d, n). This works since (message^e)^d equals 1 since e * d == 1 mod phi(n) */
 long long int RSADecrypt(long long int p, long long int q, long long int e, long long int message) {
 	long long int d, n;
 
@@ -352,12 +357,17 @@ long long int RSADecrypt(long long int p, long long int q, long long int e, long
 	return modPow(message, d, n);
 }
 
+/*  Given n, the number to factor, and m, an integer indicating which factoring
+method should be used, attempts to factor n */
 void factor(long long int n, long long int m) {
 	if (m == 0) fermatFactor(n);
 	if (m == 1) rhoFactor(n);
 	if (m == 2) pMinusOneFactor(n);
 }
 
+/* Attempts to factor n using Fermat’s factorization method. This function
+uses that fact that an odd integer can be written as the difference of two squares. So it can
+be written in the form (a+b)(a-b). This function solves for a and b. */
 void fermatFactor(long long int n) {
 	long long int a, b;
 

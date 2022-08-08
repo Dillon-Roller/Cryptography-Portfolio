@@ -303,6 +303,7 @@ vector<double> shiftVectorRight(const vector<double>& vec, int num) {
 	return newvec;
 }
 
+/* Given a text string, run a frequency analysis of each letter (English) */
 vector<double> freq(string text) {
 	string A = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	vector<double> result(26, 0);
@@ -319,6 +320,7 @@ vector<double> freq(string text) {
 	return result;
 }
 
+/*  Given two vectors of integers, computes the dot product */
 double dotProd(const vector<double>& v1, const vector<double>& v2) {
 	double sum = 0;
 	for (int i = 0; i < (int)v1.size(); i++) {
@@ -327,6 +329,8 @@ double dotProd(const vector<double>& v1, const vector<double>& v2) {
 	return sum;
 }
 
+/* Given a number a, exponent n, and modulus m, computes an
+ mod m. This function avoids overflow by reducing the number everytime a multiply is done. */
 long long int modPow(long long int a, long long int n, long long int m) {
 	int res = 1;
 	while (n--) {

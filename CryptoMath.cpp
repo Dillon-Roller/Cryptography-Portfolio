@@ -305,14 +305,15 @@ vector<double> shiftVectorRight(const vector<double>& vec, int num) {
 
 vector<double> freq(string text) {
 	string A = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	text = upper(text);
 	vector<double> result(26, 0);
-
-	for (int i = 0; i < (int)text.size(); i++) {
+	
+	text = upper(text);
+	int text_size = (int)text.size();
+	for (int i = 0; i < text_size; i++) {
 		result[text[i] - 'A']++;
 	}
 	for (int i = 0; i < 26; i++) {
-		result[i] /= (int)text.size();
+		result[i] /= text_size;
 	}
 
 	return result;

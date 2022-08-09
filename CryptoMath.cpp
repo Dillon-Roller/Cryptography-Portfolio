@@ -382,6 +382,7 @@ void fermatFactor(long long int n) {
 	cout << n << " = " << long long int(a - sqrt(b)) << " * " << long long int(a + sqrt(b));
 }
 
+/* Uses Pollard’s rho algorithm for factoring a number. */
 void rhoFactor(long long int n) {
 	long long int x, y, d;
 
@@ -403,6 +404,7 @@ void rhoFactor(long long int n) {
 	}
 }
 
+/*  Uses Pollard’s p-1 algorithm (Not exactly sure on this, use with caution) */
 void pMinusOneFactor(long long int n) {
 	int b = 5;
 	int m = 60;
@@ -414,15 +416,19 @@ void pMinusOneFactor(long long int n) {
 	else
 		cout << "Failure" << endl;
 }
-
+ /*  Given a number, determines if it is a perfect square. This is done by
+first take the square root of the number, and then the floor of the square root of the
+number. If they equal, that means it is a perfect square */
 bool isPerfectSquare(double x) {
 	return ((sqrt(x) - floor(sqrt(x)) == 0));
 }
 
+/*  Used in conjunction with rhoFactor. It is essentially a polynomial mod n */
 int g(long long int x, long long int n) {
 	return (x * x + 1) % n;
 }
 
+/* Given a vector of integers, converts this to a string */
 vector<int> strToVec(string num) {
 	vector<int> res;
 
@@ -435,6 +441,7 @@ vector<int> strToVec(string num) {
 	return res;
 }
 
+/*  Given a string of integers, converts this to a vector of integers */
 string vecToStr(vector<int> num) {
 	string res = "";
 
@@ -447,6 +454,9 @@ string vecToStr(vector<int> num) {
 	return res; 
 }
 
+/*  Given the key string and the current round, computes the roundkey. This is
+computed by starting at the ith bit in the key, where i is the current round. The next 8 bits
+are the roundKey */
 string roundKey(string num, int round) {
 	string shifted = "00000000";
 	for (int i = 0; i < 8; i++) {
@@ -455,6 +465,8 @@ string roundKey(string num, int round) {
 	return shifted;
 }
 
+/* Given a string of 6 bits, expands it to a new number that has 8 bits. This is
+done by duplicating the middle 2 bits of the 6 bit number to create an 8 bit number */
 string expander(string num) {
 	string res = "00000000";
 	res[0] = num[0];
@@ -468,6 +480,10 @@ string expander(string num) {
 	return res;
 }
 
+/* Given the message string to encrypt, the key string, and the number of
+rounds to perform, initializes variables. For each round, compute the round key and call
+DES with the left and right halves of the message, along with the round key. Returns the
+final encrypted message */
 string DEShelper(string msg, string K, int num_rounds) {
 	string newMsg = "000000000000";
 	string L0 = "000000";
@@ -487,6 +503,11 @@ string DEShelper(string msg, string K, int num_rounds) {
 	return L0 + R0;
 }
 
+/*  Given the left and right 6 bits of the message, along with the current roundKey,
+calls our f function on the right 6 bits and the roundKey. The result of this is XORed with
+the left 6 bits and results in the new right 6 bits of the message. The new left 6 bits of the
+message is set to the old right 6 bits. The new left and right 6 bits are concatenated and
+returned */
 string DES(string L, string R, string K) {
 	string Li, Ri, res;
 
@@ -499,6 +520,15 @@ string DES(string L, string R, string K) {
 	return Li + Ri;
 }
 
+/* Defines the function used in DES. This is the one used in the simplified DES. The
+algorithm is as follows: This function takes in the right 6 bits at the beginning of the
+round and is expanded to 8 bits. This 8 bit result is then XORed with the round key and
+the 8 bit result is stored. We then split this 8 bit number into two parts, the left and right 4
+bits. These 4 bits are ran through 2 S-boxes. An S-box is a table that maps a 4 bit input to
+a 3 bit output in the following way: The first bit indicates the row to use, and the
+remaining 3 bits correspond to the column. The output is the entry at s-box[row][col].
+The 3 bit output from each s-box is concatenated into a 6 bit out and returned from this
+function */
 string f(string R, string K) {
 
 	string Sbox[2][8] = {
@@ -525,7 +555,7 @@ string f(string R, string K) {
 	
 	return S1result + S2result;
 }
-
+ /* Given two binary strings, does bitwise addition mod 2 */
 string XOR(string n1, string n2) {
 	string res = "00000000";
 	for (int i = 0; i < (int)n1.size(); i++) {
@@ -538,6 +568,8 @@ string XOR(string n1, string n2) {
 	return res;
 }
 
+/* Schoolbook method for determining whether a number is prime or not.
+Complexity: O(n) */
 bool isPrime(int n)
 {
 	if (n <= 1)  
@@ -549,7 +581,10 @@ bool isPrime(int n)
 
 	return true;
 }
-
+ /*  Given b, generates a random prime between 2^(b+1) - 1 and 2^b - 1 This
+uses the rand() function and generates a random number in that range. This function then
+loops until the number it generates returns true from the isPrime function. At that point,
+we know it is prime and the number is returned */
 int random_prime(int b) {
 	int num = 4;
 	while (!isPrime(num)) {
